@@ -8,6 +8,8 @@
 - 行业笔记
 
 ## 最新文章
+<!-- BLOG-POST-LIST:START -->
+<!-- BLOG-POST-LIST:END -->
 - [lzjt](/posts/LZM012.MD)
 - [再生元回到10年前](/posts/regeneron_10_years.md)
 
