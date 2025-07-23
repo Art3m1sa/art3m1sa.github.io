@@ -1,17 +1,17 @@
-# art3m1sa.github.io
-## Hi there 👋
+# 欢迎访问我的投资博客！ 👋
 
-<!--
-**Art3m1sa/Art3m1sa** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+[![GitHub Pages](https://img.shields.io/badge/GitHub-Pages-brightgreen)](https://pages.github.com)
 
-Here are some ideas to get you started:
+我是一名价值投资的小学生，这里分享一些学习笔记：
+- 宏观学习
+- 策略学习
+- 行业笔记
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+## 最新文章
+- [再生元回到10年前](/posts/regeneron_10_years.md)
+
+## 联系我
+📧 email@example.com  
+🐦 [@twitter_handle](https://twitter.com/yourhandle)
+
+[查看所有文章 →](/archive)
