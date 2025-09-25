@@ -1,28 +1,59 @@
-name: Update blog posts list
+# .github/workflows/blog-post-updater.yml
+
+name: Update blog posts list from /posts directory
 
 on:
   push:
     branches:
-      - main # 或者你的主分支名
+      - main # 确保这是你的主分支
+    paths:
+      - 'posts/**.md' # 只在 /posts 目录下的 .md 文件发生变化时才触发
+      - '.github/workflows/blog-post-updater.yml' # 工作流自身变化也触发
 
 jobs:
-  update-readme-with-blog:
+  update-readme-with-blog-posts:
     name: Update README with latest blog posts
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Generate blog post list
-        uses: gautamkrishnar/blog-post-workflow@v1
+      - name: Generate post list
+        id: generate_list # 给这个步骤一个ID，方便后续引用它的输出
+        run: |
+          # 查找 posts 目录下所有 .md 文件，并格式化为 Markdown 链接
+          # 然后将结果保存到一个名为 BLOG_POSTS 的环境变量中
+          POSTS=$(find posts -name "*.md" | sort -r | while read -r file; do
+            # 从文件名（不含.md后缀）中提取标题
+            title=$(basename "$file" .md | sed 's/-/ /g') # 将连字符替换为空格
+            # 格式化为 Markdown 列表项
+            echo "- [$title]($file)"
+          done)
+          
+          # 使用特殊语法将多行字符串设置为 GitHub Actions 的输出变量
+          echo "post_list<<EOF" >> $GITHUB_OUTPUT
+          echo "$POSTS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Update README.md
+        uses: anmol098/readme-updater@v1
         with:
-          # 指定你的文章源，这里是仓库内的文件夹
-          feed_list: "./posts" 
-          # 在 README.md 中寻找的标记名
-          comment_tag_name: "BLOG-POST-LIST"
-          # 生成列表的模板， $title 是文件名，$url 是文件路径
-          template: "- [$title]($url)"
-          # 日期格式
-          date_format: "yyyy-mm-dd"
-          # 列表条目前缀
-          commit_message: "docs: update blog post list"
+          # 要更新的文件
+          readme_path: "README.md"
+          # 要替换的内容，来自上一步的输出
+          replace_content: "${{ steps.generate_list.outputs.post_list }}"
+          # 替换区域的标记
+          target_marker: "<!-- BLOG-POST-LIST -->"
+
+      - name: Commit and push if changed
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          # 检查是否有文件变动，如果有，则提交并推送
+          if ! git diff --staged --quiet; then
+            git commit -m "docs: update blog post list"
+            git push
+          else
+            echo "No changes to commit."
+          fi
